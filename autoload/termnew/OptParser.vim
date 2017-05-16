@@ -150,7 +150,6 @@ endfunction
 
 function termnew#OptParser#new() abort
 	return copy(s:OptParser)
-	return new_obj
 endfunction
 
 
