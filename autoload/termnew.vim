@@ -22,19 +22,18 @@ function termnew#do_command(count, ...) abort
 		let new_cmd = printf('%s %s', op.result(), new_cmd)
 	endif
 
-	call termnew#new_term({
+	call termnew#new_terminal({
 	\	s:NEW_TERM_OPT_CMD: empty(term_cmd) ? s:default_term_cmd() : term_cmd,
 	\	s:NEW_TERM_OPT_SPL: new_cmd,
 	\})
 endfunction
 
 
-function termnew#new_term(...) abort
+function termnew#new_terminal(...) abort
 	let opts = a:0 == 0 ? {} : a:1
 	let cmd = has_key(opts, s:NEW_TERM_OPT_CMD) ?
 	\	opts[s:NEW_TERM_OPT_CMD] : s:default_term_cmd()
-	let splitcmd = has_key(opts, s:NEW_TERM_OPT_SPL) ?
-	\	opts[s:NEW_TERM_OPT_SPL] : 'new'
+	let splitcmd = get(opts, s:NEW_TERM_OPT_SPL, 'new')
 
 	" Execute the command to open the new buffer, call termopen and start
 	" insert, to emulate the behaviour of :terminal.

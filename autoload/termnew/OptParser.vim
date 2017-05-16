@@ -9,7 +9,7 @@ let s:O_RIGHT = 'r'
 let s:O_TOP = 'L'
 let s:O_BOT = 'R'
 
-let s:O_MAP = {
+let s:DISPATCH = {
 \	s:O_VERT: '_opt_vert',
 \	s:O_TAB: '_opt_tab',
 \	s:O_LEFT: '_opt_left',
@@ -17,6 +17,11 @@ let s:O_MAP = {
 \	s:O_TOP: '_opt_top',
 \	s:O_BOT: '_opt_bot',
 \}
+
+
+function termnew#OptParser#new() abort
+	return copy(s:OptParser)
+endfunction
 
 
 let s:OptParser = {
@@ -31,7 +36,7 @@ let s:OptParser = {
 function s:OptParser.parse(optstr) abort
 	for opt in split(a:optstr, '\zs')
 		try
-			let fname = s:O_MAP[opt]
+			let fname = s:DISPATCH[opt]
 		catch /^Vim\%((\a\+)\)\=:E716/
 			" Key not in dictionary
 			throw 'termnew#OptParser:UnknownOption: ' . opt
@@ -145,11 +150,6 @@ function s:OptParser._opt_bot() abort
 	endif
 
 	let self._bot = 1
-endfunction
-
-
-function termnew#OptParser#new() abort
-	return copy(s:OptParser)
 endfunction
 
 
