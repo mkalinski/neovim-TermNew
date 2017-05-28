@@ -6,5 +6,5 @@ endif
 let loaded_TermNew = 1
 
 
-command -nargs=* -complete=shellcmd -count TermNew
-\	call termnew#do_command(<count>, <f-args>)
+command -nargs=* -complete=shellcmd TermNew
+\	call termnew#command_termnew(<f-args>)

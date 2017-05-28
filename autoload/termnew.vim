@@ -4,12 +4,12 @@ let s:NEW_TERM_OPT_CMD = 'termcmd'
 let s:NEW_TERM_OPT_SPL = 'splitcmd'
 
 
-function termnew#do_command(count, ...) abort
+function termnew#command_termnew(...) abort
 	" Separate the option-arg from the rest.
 	let rest_index = a:0 > 0 && a:1 =~ '^-' ? 1 : 0
 	let term_cmd = a:000[rest_index:]
 
-	let new_cmd = (a:count > 0 ? a:count : '') . 'new'
+	let new_cmd = 'new'
 	" Process the options if present. Skip the initial dash.
 	if rest_index
 		let op = termnew#OptParser#new()
@@ -19,7 +19,7 @@ function termnew#do_command(count, ...) abort
 			echoerr v:exception
 			return
 		endtry
-		let new_cmd = printf('%s %s', op.result(), new_cmd)
+		let new_cmd = op.get_modifiers_string() . new_cmd
 	endif
 
 	call termnew#new_terminal({
