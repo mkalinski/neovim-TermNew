@@ -1,6 +1,6 @@
 " Copyright 2017 Michał Kaliński
 
-if exists('g:loaded_TermNew')
+if get(g:, 'loaded_TermNew', 0)
 	finish
 endif
 let loaded_TermNew = 1
