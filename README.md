@@ -41,3 +41,11 @@ itself.
 For example, `:TermNew -vL python` will open the Python interpreter in a
 vertical split that will be put at the leftmost position, and
 `:TermNew -t bash` will open the Bash shell in a new tab.
+
+```
+:TermNewShellInDir [OPTIONS] [DIRECTORY]
+```
+
+Opens a new shell (the same way as `:TermNew` without arguments) in working
+directory given as argument. Options are parsed and interpreted the same way as
+for `:TermNew`.

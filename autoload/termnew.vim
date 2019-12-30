@@ -1,48 +1,51 @@
-" Copyright 2017 Michał Kaliński
+" Copyright 2017,2019 Michał Kaliński
 
-let s:NEW_TERM_OPT_CMD = 'termcmd'
-let s:NEW_TERM_OPT_SPL = 'splitcmd'
-
-
-function termnew#command_termnew(...) abort
+function termnew#split_args(...) abort
 	" Separate the option-arg from the rest.
-	let rest_index = a:0 > 0 && a:1 =~ '^-' ? 1 : 0
-	let term_cmd = a:000[rest_index:]
-
-	let new_cmd = 'new'
-	" Process the options if present. Skip the initial dash.
-	if rest_index
-		let op = termnew#OptParser#new()
-		try
-			call op.parse(strpart(a:1, 1))
-		catch /^termnew#OptParser:\%(BadCombination\|UnknownOption\)/
-			echoerr v:exception
-			return
-		endtry
-		let new_cmd = op.get_modifiers_string() . new_cmd
+	if a:0 > 0 && strcharpart(a:1, 0, 1) ==# '-'
+		let opts = strcharpart(a:1, 1)
+		let rest = a:000[1:]
+	else
+		let opts = ''
+		let rest = a:000
 	endif
-
-	call termnew#new_terminal({
-	\	s:NEW_TERM_OPT_CMD: empty(term_cmd) ? s:default_term_cmd() : term_cmd,
-	\	s:NEW_TERM_OPT_SPL: new_cmd,
-	\})
+	return {'options': opts, 'rest': rest}
 endfunction
 
-
-function termnew#new_terminal(...) abort
-	let opts = a:0 == 0 ? {} : a:1
-	let cmd = has_key(opts, s:NEW_TERM_OPT_CMD) ?
-	\	opts[s:NEW_TERM_OPT_CMD] : s:default_term_cmd()
-	let splitcmd = get(opts, s:NEW_TERM_OPT_SPL, 'new')
-
-	" Execute the command to open the new buffer, call termopen and start
-	" insert, to emulate the behaviour of :terminal.
-	execute splitcmd
-	call termopen(cmd)
+function termnew#open_command(args) abort
+	call s:open_window(a:args.options)
+	call termopen(!empty(a:args.rest) ? a:args.rest : s:default_shell())
 	startinsert
 endfunction
 
+function termnew#open_shell_in_wd(args) abort
+	call s:open_window(a:args.options)
+	call termopen(s:default_shell(), {'cwd': expand(join(a:args.rest))})
+	startinsert
+endfunction
 
-function s:default_term_cmd() abort
+function termnew#guard_exceptions(func) abort
+	try
+		call a:func()
+	catch /^termnew#OptParser:\%(BadCombination\|UnknownOption\)/
+		echoerr 'TermNew options error:'
+		\	strpart(v:exception, stridx(v:exception, ':') + 1)
+	endtry
+endfunction
+
+function s:open_window(options_string) abort
+	execute s:get_window_open_modifiers(a:options_string) 'new'
+endfunction
+
+function s:get_window_open_modifiers(options_string) abort
+	if empty(a:options_string)
+		return ''
+	endif
+	let options_parser = termnew#OptParser#new()
+	call options_parser.parse(a:options_string)
+	return options_parser.get_modifiers_string()
+endfunction
+
+function s:default_shell() abort
 	return [(empty($SHELL) ? &shell : $SHELL)]
 endfunction
