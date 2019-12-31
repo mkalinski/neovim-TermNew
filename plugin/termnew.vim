@@ -6,11 +6,7 @@ endif
 let loaded_TermNew = 1
 
 command! -nargs=* -complete=shellcmd TermNew
-\	call termnew#guard_exceptions({->
-\		termnew#open_command(termnew#split_args(<f-args>))
-\	})
+\	call termnew#open_command(<q-mods>, <f-args>)
 
-command! -nargs=* -complete=file TermNewShellInDir
-\	call termnew#guard_exceptions({->
-\		termnew#open_shell_in_wd(termnew#split_args(<f-args>))
-\	})
+command! -nargs=1 -complete=file TermNewShellInDir
+\	call termnew#open_shell_in_wd(<q-mods>, <q-args>)
