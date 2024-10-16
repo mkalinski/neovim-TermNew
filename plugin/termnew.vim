@@ -1,12 +1,13 @@
-" Copyright 2017,2019 Michał Kaliński
+" Copyright 2017,2019,2024 Michał Kaliński
 
-if get(g:, 'loaded_TermNew', 0)
+if get(g:, 'loaded_termnew', 0)
 	finish
 endif
-let loaded_TermNew = 1
 
-command! -nargs=* -complete=shellcmd TermNew
-\	call termnew#open_command(<q-mods>, <f-args>)
+let g:loaded_termnew = 1
 
-command! -nargs=1 -complete=file TermNewShellInDir
-\	call termnew#open_shell_in_wd(<q-mods>, <q-args>)
+command -nargs=* -complete=shellcmd TermNew
+\	call termnew#open(<q-mods>, <f-args>)
+
+command -nargs=+ -complete=file TermNewCwd
+\	call termnew#open_cwd(<q-mods>, <f-args>)
