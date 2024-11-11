@@ -1,19 +1,22 @@
 " Copyright 2017,2019,2024 Michał Kaliński
 
-function termnew#open(mods, ...) abort
-	call s:open(a:mods, '.', a:000)
+function termnew#open(start_insert, mods, ...) abort
+	call s:open(a:start_insert, a:mods, '.', a:000)
 endfunction
 
-function termnew#open_cwd(mods, cwd, ...) abort
-	call s:open(a:mods, a:cwd, a:000)
+function termnew#open_cwd(start_insert, mods, cwd, ...) abort
+	call s:open(a:start_insert, a:mods, a:cwd, a:000)
 endfunction
 
-function s:open(mods, cwd, cmd) abort
+function s:open(start_insert, mods, cwd, cmd) abort
 	let l:cmd = empty(a:cmd) ? s:get_shell_cmd() : a:cmd
 
 	execute a:mods 'new'
 	call termopen(l:cmd, {'cwd': expand(a:cwd)})
-	startinsert
+
+	if a:start_insert
+		startinsert
+	endif
 endfunction
 
 function s:get_shell_cmd() abort

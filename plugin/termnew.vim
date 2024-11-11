@@ -6,8 +6,8 @@ endif
 
 let g:loaded_termnew = 1
 
-command -nargs=* -complete=shellcmd TermNew
-\	call termnew#open(<q-mods>, <f-args>)
+command -bang -nargs=* -complete=shellcmd TermNew
+\	call termnew#open(<bang>1, <q-mods>, <f-args>)
 
-command -nargs=+ -complete=file TermNewCwd
-\	call termnew#open_cwd(<q-mods>, <f-args>)
+command -bang -nargs=+ -complete=file TermNewCwd
+\	call termnew#open_cwd(<bang>1, <q-mods>, <f-args>)
