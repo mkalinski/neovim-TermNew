@@ -1,5 +1,10 @@
 # TermNew: open Neovim terminal in a new window or tab
 
+> [!IMPORTANT]
+> After 7 years since introducing the `:terminal` command,
+> Neovim finally introduced a simple native way of opening terminals in other windows.
+> This plugin is no longer needed.
+
 Using Neovim's built-in command `:terminal` it's impossible to open a terminal
 in a new window or tab. The only way to do that is to use forms that are rather
 cumbersome to type, for example: `split term://$SHELL`.
